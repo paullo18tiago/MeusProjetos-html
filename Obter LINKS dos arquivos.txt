@@ -1,0 +1,10 @@
+
+Link padrão dos arquivos hospedados:
+
+
+https://paullo18tiago.github.io/MeusProjetos-html/(nome-do-arquivo.extensão)
+
+
+Exemplo:
+
+https://paullo18tiago.github.io/MeusProjetos-html/Calculadora.html
