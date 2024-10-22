@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário e Relógio Digital</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .clock-container {
+            background-color: #333;
+            padding: 5px 15px; /* Ajuste o padding aqui para deixar mais estreito */
+            border-radius: 10px;
+            color: white;
+            font-size: 2.5em; /* Reduzido o tamanho da fonte */
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Adicionei sombra ao relógio */
+        }
+
+        .calendar-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .month {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .date {
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        th, td {
+            padding: 10px;
+        }
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+        td {
+            padding: 15px;
+            cursor: pointer;
+        }
+
+        td:hover {
+            background-color: #eee;
+        }
+
+        .today {
+            background-color: #ff6347;
+            color: white;
+            border-radius: 50%;
+        }
+
+        .nav-button {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .selector-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        #monthSelect, #yearSelect {
+            padding: 10px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        #updateButton {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="clock-container" id="clock"></div>
+    <div class="selector-container">
+        <select id="monthSelect"></select>
+        <select id="yearSelect"></select>
+        <button id="updateButton">Atualizar</button>
+    </div>
+    <div class="calendar-container">
+        <div class="month">
+            <button id="prev" class="nav-button">&#10094;</button>
+            <div class="date">
+                <span id="monthAndYear"></span>
+            </div>
+            <button id="next" class="nav-button">&#10095;</button>
+        </div>
+        <table id="calendar" class="calendar">
+            <thead>
+                <tr>
+                    <th>Dom</th>
+                    <th>Seg</th>
+                    <th>Ter</th>
+                    <th>Qua</th>
+                    <th>Qui</th>
+                    <th>Sex</th>
+                    <th>Sáb</th>
+                </tr>
+            </thead>
+            <tbody id="calendar-body"></tbody>
+        </table>
+    </div>
+
+    <script>
+        const clockElement = document.getElementById('clock');
+        const calendarBody = document.getElementById('calendar-body');
+        const monthAndYear = document.getElementById('monthAndYear');
+        const monthSelect = document.getElementById('monthSelect');
+        const yearSelect = document.getElementById('yearSelect');
+        const updateButton = document.getElementById('updateButton');
+
+        let today = new Date();
+        let currentMonth = today.getMonth();
+        let currentYear = today.getFullYear();
+
+        const months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+
+        // Populando o seletor de meses
+        months.forEach((month, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = month;
+            monthSelect.appendChild(option);
+        });
+
+        // Populando o seletor de anos
+        const startYear = currentYear - 50; // 50 anos no passado
+        const endYear = currentYear + 50; // 50 anos no futuro
+        for (let year = startYear; year <= endYear; year++) {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            yearSelect.appendChild(option);
+        }
+
+        // Atualiza os seletores para os valores atuais
+        monthSelect.value = currentMonth;
+        yearSelect.value = currentYear;
+
+        function showClock() {
+            let now = new Date();
+            let hours = String(now.getHours()).padStart(2, '0');
+            let minutes = String(now.getMinutes()).padStart(2, '0');
+            let seconds = String(now.getSeconds()).padStart(2, '0');
+            clockElement.innerHTML = `${hours}:${minutes}:${seconds}`;
+        }
+
+        function generateCalendar(month, year) {
+            calendarBody.innerHTML = "";
+            monthAndYear.innerHTML = `${months[month]} ${year}`;
+
+            let firstDay = new Date(year, month).getDay();
+            let daysInMonth = 32 - new Date(year, month, 32).getDate();
+
+            let date = 1;
+            for (let i = 0; i < 6; i++) {
+                let row = document.createElement('tr');
+
+                for (let j = 0; j < 7; j++) {
+                    if (i === 0 && j < firstDay) {
+                        let cell = document.createElement('td');
+                        cell.innerText = "";
+                        row.appendChild(cell);
+                    } else if (date > daysInMonth) {
+                        break;
+                    } else {
+                        let cell = document.createElement('td');
+                        cell.innerText = date;
+
+                        if (date === today.getDate() && year === today.getFullYear() && month === today.getMonth()) {
+                            cell.classList.add('today');
+                        }
+                        row.appendChild(cell);
+                        date++;
+                    }
+                }
+                calendarBody.appendChild(row);
+            }
+        }
+
+        document.getElementById('prev').addEventListener('click', () => {
+            currentYear = (currentMonth === 0) ? currentYear - 1 : currentYear;
+            currentMonth = (currentMonth === 0) ? 11 : currentMonth - 1;
+            monthSelect.value = currentMonth; // Atualiza o seletor de mês
+            yearSelect.value = currentYear; // Atualiza o seletor de ano
+            generateCalendar(currentMonth, currentYear);
+        });
+
+        document.getElementById('next').addEventListener('click', () => {
+            currentYear = (currentMonth === 11) ? currentYear + 1 : currentYear;
+            currentMonth = (currentMonth === 11) ? 0 : currentMonth + 1;
+            monthSelect.value = currentMonth; // Atualiza o seletor de mês
+            yearSelect.value = currentYear; // Atualiza o seletor de ano
+            generateCalendar(currentMonth, currentYear);
+        });
+
+        updateButton.addEventListener('click', () => {
+            currentMonth = parseInt(monthSelect.value);
+            currentYear = parseInt(yearSelect.value);
+            generateCalendar(currentMonth, currentYear);
+        });
+
+        generateCalendar(currentMonth, currentYear);
+        setInterval(showClock, 1000);
+    </script>
+</body>
+</html>
