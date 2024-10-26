@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acessar URL com Proxy</title>
+</head>
+<body>
+    <h1>Acessando a URL</h1>
+    <div id="content"></div>
+
+    <script>
+        const proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+        const targetUrl = 'https://exemplo.com'; // Substitua pela sua URL
+
+        fetch(proxyUrl + targetUrl)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao acessar a URL');
+                }
+                return response.text();
+            })
+            .then(data => {
+                document.getElementById('content').innerHTML = data;
+            })
+            .catch(error => {
+                document.getElementById('content').innerHTML = `<p>${error.message}</p>`;
+            });
+    </script>
+</body>
+</html>
