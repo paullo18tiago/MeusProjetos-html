@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clipboard com Registro (Obsidian)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        #clipboardList {
+            margin-top: 20px;
+            padding: 0;
+            list-style-type: none;
+            width: 90%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        #clipboardList li {
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-bottom: 5px;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        button {
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 0 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        textarea {
+            width: calc(100% - 22px);
+            margin-bottom: 10px;
+            font-size: 14px;
+            padding: 10px;
+        }
+        .backup-buttons {
+            margin-top: 10px;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .button-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .full-width-button {
+            display: block;
+            width: 100%; /* Os botões ocuparão a mesma largura */
+            max-width: 300px; /* Defina uma largura máxima se necessário */
+            margin: 5px auto; /* Centraliza os botões */
+        }
+        input[type="file"] {
+            display: block;
+            width: 100%; /* O input ocupa a mesma largura */
+            max-width: 300px; /* Defina uma largura máxima */
+            margin: 5px auto; /* Centraliza o input */
+        }
+        .export-button {
+            background-color: #ccc;
+            color: black;
+            min-width: 120px;
+        }
+        .export-button:hover {
+            background-color: #b3b3b3;
+        }
+        .item-button {
+            padding: 4px 8px;
+            margin: 0 -3px; /* Valor negativo para aproximar os botões */
+            background-color: #d3d3d3;
+            color: black;
+            border: none;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        #clipboardList li {
+            display: flex;
+            justify-content: space-between; /* Mantém o texto à esquerda e os botões à direita */
+            align-items: center;
+            padding: 10px;
+            gap: 0;
+        }
+        #clipboardList li span {
+            flex-grow: 1; /* O texto ocupa todo o espaço à esquerda */
+            text-align: left;
+            margin-right: 10px; /* Espaço entre o texto e os botões */
+        }
+        .button-group {
+            display: flex;
+            gap: 20px; /* Aproxima os botões */
+        }
+        .item-button:hover {
+            background-color: #c0c0c0;
+        }
+    </style>
+    <script>
+        let clipboardItems = [];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadClipboardItems();
+        });
+
+        async function copyAllItems() {
+            if (clipboardItems.length === 0) {
+                alert('Não há itens para copiar.');
+                return;
+            }
+
+            // Copiar na ordem do mais recente ao mais antigo
+            const allItems = clipboardItems.slice().reverse().join('\n'); // Junte os itens com uma nova linha
+            try {
+                await navigator.clipboard.writeText(allItems);
+                alert/('Todos os itens copiados para a área de transferência!');
+            } catch (err) {
+                console.error('Falha ao copiar todos os itens: ', err);
+                alert('Erro ao copiar todos os itens.');
+            }
+        }
+
+        function loadClipboardItems() {
+            const savedItems = localStorage.getItem('clipboardItems');
+            if (savedItems) {
+                clipboardItems = JSON.parse(savedItems);
+                renderClipboardList();
+            }
+        }
+
+        function saveClipboardItems() {
+            localStorage.setItem('clipboardItems', JSON.stringify(clipboardItems));
+        }
+
+        function copyToClipboard() {
+            const textToCopy = document.getElementById('textToCopy');
+            textToCopy.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    addToClipboardList(textToCopy.value);
+                    alert/('Texto copiado para a área de transferência: ' + textToCopy.value);
+                    textToCopy.value = '';
+                } else {
+                    alert('Falha ao copiar texto.');
+                }
+            } catch (err) {
+                console.error('Falha ao copiar: ', err);
+                alert('Erro ao copiar texto.');
+            }
+        }
+
+        function copyItem(item) {
+            const textarea = document.createElement('textarea');
+            textarea.value = item;
+            document.body.appendChild(textarea);
+            textarea.select();
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    alert/('Texto copiado para a área de transferência: ' + item);
+                } else {
+                    alert('Falha ao copiar item.');
+                }
+            } catch (err) {
+                console.error('Falha ao copiar item: ', err);
+                alert('Erro ao copiar item.');
+            }
+            document.body.removeChild(textarea);
+        }
+
+        function addToClipboardList(text) {
+            clipboardItems.push(text);
+            saveClipboardItems();
+            renderClipboardList();
+        }
+
+        function renderClipboardList() {
+            const listElement = document.getElementById('clipboardList');
+            listElement.innerHTML = '';
+            clipboardItems.slice().reverse().forEach((item, index) => {
+                const listItem = document.createElement('li');
+
+                // Adicionar span para o texto
+                const textSpan = document.createElement('span');
+                textSpan.textContent = item;
+                listItem.appendChild(textSpan);
+
+                // Criar a div para agrupar os botões
+                const buttonGroup = document.createElement('div');
+                buttonGroup.className = 'button-group';
+
+                const deleteButton = document.createElement('button');
+                deleteButton.textContent = 'Apagar';
+                deleteButton.className = 'item-button';
+                deleteButton.onclick = () => deleteItem(index);
+
+                const copyButton = document.createElement('button');
+                copyButton.textContent = 'Copiar';
+                copyButton.className = 'item-button';
+                copyButton.onclick = () => copyItem(item);
+
+                // Adicionar os botões ao grupo
+                buttonGroup.appendChild(deleteButton);
+                buttonGroup.appendChild(copyButton);
+
+                // Adicionar o grupo de botões ao item da lista
+                listItem.appendChild(buttonGroup);
+                listElement.appendChild(listItem);
+            });
+        }
+
+        function deleteItem(index) {
+            clipboardItems.splice(index, 1);
+            saveClipboardItems();
+            renderClipboardList();
+        }
+
+        function deleteAllItems() {
+            clipboardItems = [];
+            saveClipboardItems();
+            renderClipboardList();
+        }
+
+        // Função atualizada para exportar os itens na ordem do mais recente ao mais antigo
+        function exportItems() {
+            const allItems = clipboardItems.slice().reverse().join('\n'); // Juntar os itens na ordem inversa (mais recente ao mais antigo)
+            const blob = new Blob([allItems], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'clipboard_items.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function importItems(event) {
+            const file = event.target.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const importedItems = JSON.parse(e.target.result);
+                clipboardItems = clipboardItems.concat(importedItems);
+                saveClipboardItems();
+                renderClipboardList();
+            };
+            reader.readAsText(file);
+        }
+
+        function showExportArea() {
+    document.getElementById("exportArea").style.display = "block";
+    document.getElementById("backupArea").style.display = "none";
+    
+    const exportAreaInput = document.getElementById("exportAreaInput");
+    // Inverter a ordem dos itens para exibir do mais recente ao mais antigo
+    exportAreaInput.value = clipboardItems.slice().reverse().join('\n');
+    exportAreaInput.select();
+}
+
+        function showBackupArea() {
+            document.getElementById("backupArea").style.display = "block";
+            document.getElementById("exportArea").style.display = "none";
+        }
+
+        function addItemsFromBackup() {
+            const backupText = document.getElementById('backupAreaInput').value;
+            const items = backupText.split('\n');
+            clipboardItems = clipboardItems.concat(items);
+            saveClipboardItems();
+            renderClipboardList();
+            document.getElementById('backupAreaInput').value = ''; // Limpa o campo de entrada após adicionar os itens
+        }
+
+        function copySelectedBackup() {
+            const exportAreaInput = document.getElementById('exportAreaInput');
+            exportAreaInput.select();
+            document.execCommand('copy');
+            alert('Backup copiado para a área de transferência!');
+        }
+
+        function exportBackup() {
+            const dataStr = JSON.stringify(clipboardItems);
+            const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+            const exportFileDefaultName = 'backup_clipboard.json';
+
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+    </script>
+</head>
+<body>
+
+<h2>📋 Clipboard com Registro <center>(Obsidian)</center></h2>
+<textarea id="textToCopy" rows="4" placeholder="✎ Digite ou cole o texto aqui..."></textarea><br>
+<button onclick="copyToClipboard()">Copiar Texto</button>
+
+<h3>Itens Copiados:</h3>
+<ul id="clipboardList"></ul>
+
+<div class="button-container">
+    <div class="button-row">
+        <button onclick="deleteAllItems()">Apagar todos</button>
+        <button onclick="copyAllItems()">Copiar todos</button>
+    </div>
+    <div class="button-row">
+        <button onclick="showExportArea()">Exportar Clipboard</button>
+        <button onclick="showBackupArea()">Importar Clipboard</button>
+    </div>
+    <!-- Nova linha: Escolher arquivo -->
+    <div class="button-row">
+        <input class="full-width-button" type="file" accept=".json" onchange="importItems(event)" />
+    </div>
+    <!-- Nova linha: Exportar backup -->
+    <div class="button-row">
+        <button class="full-width-button export-button" onclick="exportBackup()">Exportar backup</button>
+    </div>
+</div>
+
+<!-- Área de exportação -->
+<div id="exportArea" style="display: none;">
+    <h3>Exportar Itens do Clipboard:</h3>
+    <p>Selecione os itens a serem copiados:</p>
+    <textarea id="exportAreaInput" rows="6" placeholder="Itens do clipboard serão exibidos aqui..." readonly></textarea>
+    <button onclick="copySelectedBackup()">Copiar Backup</button>
+</div>
+
+<!-- Área de backup -->
+<div id="backupArea" style="display: none;">
+    <h3>Colar Itens do Backup:</h3>
+    <textarea id="backupAreaInput" rows="6" placeholder="✎ Cole os itens do backup aqui..."></textarea>
+    <button onclick="addItemsFromBackup()">Adicionar Itens do Backup</button>
+</div>
+
+</body>
+</html>
