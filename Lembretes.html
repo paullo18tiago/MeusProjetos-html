@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Lembretes Programáveis</title>
+    <style>
+        body { font-family: Arial, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .reminder-list { list-style: none; padding: 0; }
+        .reminder-item { background: #f0f0f0; margin: 5px 0; padding: 10px; border-radius: 5px; display: flex; justify-content: space-between; }
+        .delete-btn { color: red; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Sistema de Lembretes Programáveis</h1>
+    <input type="text" id="titleInput" placeholder="Título do Lembrete" />
+    <input type="datetime-local" id="datetimeInput" />
+    <button onclick="addReminder()">Adicionar Lembrete</button>
+    <ul class="reminder-list" id="reminderList"></ul>
+
+    <!-- Alerta sonoro -->
+    <audio id="alertSound" src="https://www.soundjay.com/button/sounds/beep-07.mp3" preload="auto"></audio>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            requestNotificationPermission();
+            loadReminders();
+            checkReminders();
+        });
+
+        function requestNotificationPermission() {
+            if (Notification.permission !== "granted") {
+                Notification.requestPermission();
+            }
+        }
+
+        function addReminder() {
+            const title = document.getElementById("titleInput").value.trim();
+            const dateTime = document.getElementById("datetimeInput").value;
+            if (title && dateTime) {
+                const reminders = JSON.parse(localStorage.getItem("reminders") || "[]");
+                reminders.push({ title, dateTime });
+                localStorage.setItem("reminders", JSON.stringify(reminders));
+                document.getElementById("titleInput").value = "";
+                document.getElementById("datetimeInput").value = "";
+                displayReminders();
+            }
+        }
+
+        function displayReminders() {
+            const reminderList = document.getElementById("reminderList");
+            const reminders = JSON.parse(localStorage.getItem("reminders") || "[]");
+            reminderList.innerHTML = "";
+            reminders.forEach((reminder, index) => {
+                const listItem = document.createElement("li");
+                listItem.className = "reminder-item";
+                listItem.innerHTML = `
+                    ${reminder.title} - ${new Date(reminder.dateTime).toLocaleString()} 
+                    <span class="delete-btn" onclick="deleteReminder(${index})">x</span>
+                `;
+                reminderList.appendChild(listItem);
+            });
+        }
+
+        function deleteReminder(index) {
+            const reminders = JSON.parse(localStorage.getItem("reminders") || "[]");
+            reminders.splice(index, 1);
+            localStorage.setItem("reminders", JSON.stringify(reminders));
+            displayReminders();
+        }
+
+        function loadReminders() {
+            displayReminders();
+        }
+
+        function checkReminders() {
+            const reminders = JSON.parse(localStorage.getItem("reminders") || "[]");
+            const now = new Date();
+            reminders.forEach((reminder, index) => {
+                const reminderTime = new Date(reminder.dateTime);
+                if (reminderTime <= now) {
+                    showNotification(reminder.title);
+                    playAlertSound();
+                    deleteReminder(index);
+                }
+            });
+            setTimeout(checkReminders, 1000); // Verifica lembretes a cada segundo
+        }
+
+        function showNotification(title) {
+            if (Notification.permission === "granted") {
+                new Notification("Lembrete", { body: title });
+            } else {
+                alert(`Lembrete: ${title}`);
+            }
+        }
+
+        function playAlertSound() {
+            const alertSound = document.getElementById("alertSound");
+            alertSound.play();
+        }
+    </script>
+</body>
+</html>
