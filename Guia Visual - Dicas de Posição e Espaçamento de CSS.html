@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia Visual Completo de CSS</title>
+<style>
+  /* ========================================
+     RESET E BOX-SIZING GLOBAL
+     ======================================== */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;  /* ← Inclui padding e border no tamanho total */
+  }
+
+  /* ========================================
+     BODY - CONTAINER PRINCIPAL
+     ======================================== */
+  body {
+    /* DISPLAY E POSIÇÃO */
+    display: flex;              /* ← Habilita Flexbox */
+    flex-direction: column;     /* ← Itens empilhados verticalmente */
+    
+    /* TAMANHO */
+    min-height: 100vh;          /* ← Mínimo = altura da tela inteira */
+    width: 100%;                /* ← Largura total disponível */
+    
+    /* ESPAÇAMENTO */
+    padding: 20px;              /* ← 20px de respiro interno em todos os lados */
+    gap: 30px;                  /* ← 30px de espaço entre cada seção */
+    
+    /* VISUAL */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+  }
+
+  /* ========================================
+     TÍTULO PRINCIPAL
+     ======================================== */
+  h1 {
+    /* TAMANHO */
+    font-size: 2.5rem;          /* ← 2.5x o tamanho padrão da fonte */
+    
+    /* ESPAÇAMENTO */
+    margin-bottom: 10px;        /* ← 10px de espaço abaixo */
+    padding: 20px;              /* ← 20px de respiro interno */
+    
+    /* VISUAL */
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;        /* ← Cantos arredondados */
+    text-align: center;         /* ← Texto centralizado */
+    border: 2px solid rgba(255, 255, 255, 0.3);
+  }
+
+  /* ========================================
+     CONTAINER DE SEÇÃO
+     ======================================== */
+  .secao {
+    /* VISUAL */
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;        /* ← Cantos bem arredondados */
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    
+    /* ESPAÇAMENTO */
+    padding: 25px;              /* ← Respiro interno */
+    margin-bottom: 20px;        /* ← Espaço abaixo de cada seção */
+    
+    /* POSIÇÃO */
+    position: relative;         /* ← Necessário para position absolute dos filhos */
+  }
+
+  /* ========================================
+     TÍTULO DAS SEÇÕES
+     ======================================== */
+  .secao h2 {
+    /* TAMANHO */
+    font-size: 1.8rem;
+    
+    /* ESPAÇAMENTO */
+    margin-bottom: 15px;        /* ← Espaço abaixo do título */
+    padding-bottom: 10px;       /* ← Respiro interno abaixo */
+    
+    /* VISUAL */
+    border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+    color: #FFD700;             /* ← Cor dourada */
+  }
+
+  /* ========================================
+     DESCRIÇÃO/EXPLICAÇÃO
+     ======================================== */
+  .explicacao {
+    /* VISUAL */
+    background: rgba(0, 0, 0, 0.3);
+    border-left: 4px solid #4ADE80;  /* ← Borda verde à esquerda */
+    border-radius: 8px;
+    
+    /* ESPAÇAMENTO */
+    padding: 15px;              /* ← Respiro interno */
+    margin-bottom: 20px;        /* ← Espaço abaixo */
+    
+    /* TEXTO */
+    font-size: 0.95rem;
+    line-height: 1.6;           /* ← Espaçamento entre linhas */
+  }
+
+  /* ========================================
+     CONTAINER FLEXBOX - DEMONSTRAÇÃO
+     ======================================== */
+  .demo-flex {
+    /* DISPLAY */
+    display: flex;              /* ← Ativa Flexbox */
+    justify-content: center;    /* ← Centraliza horizontalmente */
+    align-items: center;        /* ← Centraliza verticalmente */
+    
+    /* TAMANHO */
+    min-height: 200px;          /* ← Altura mínima */
+    
+    /* ESPAÇAMENTO */
+    gap: 15px;                  /* ← Espaço entre os itens internos */
+    padding: 20px;
+    
+    /* VISUAL */
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px dashed rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    flex-wrap: wrap;            /* ← Quebra linha se não couber */
+  }
+
+  /* ========================================
+     CAIXAS DE DEMONSTRAÇÃO
+     ======================================== */
+  .caixa {
+    /* TAMANHO */
+    width: 150px;               /* ← Largura fixa */
+    height: 150px;              /* ← Altura fixa */
+    
+    /* ESPAÇAMENTO */
+    padding: 20px;              /* ← Respiro interno */
+    
+    /* VISUAL */
+    background: linear-gradient(135deg, #FF6B6B, #FFE66D);
+    border-radius: 15px;
+    border: 3px solid white;
+    
+    /* DISPLAY */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* TEXTO */
+    font-weight: bold;
+    text-align: center;
+    color: #333;
+    
+    /* TRANSFORMAÇÃO */
+    transition: transform 0.3s;  /* ← Animação suave */
+  }
+
+  .caixa:hover {
+    transform: scale(1.1);      /* ← Aumenta 10% ao passar mouse */
+    cursor: pointer;
+  }
+
+  /* ========================================
+     DEMONSTRAÇÃO DE POSITION
+     ======================================== */
+  .container-position {
+    /* POSIÇÃO */
+    position: relative;         /* ← Referência para absolute */
+    
+    /* TAMANHO */
+    height: 300px;
+    
+    /* VISUAL */
+    background: rgba(0, 0, 0, 0.2);
+    border: 2px dashed rgba(255, 255, 255, 0.4);
+    border-radius: 12px;
+    
+    /* ESPAÇAMENTO */
+    padding: 20px;
+    margin-top: 20px;
+  }
+
+  .caixa-relative {
+    /* POSIÇÃO */
+    position: relative;         /* ← Move relativo à posição original */
+    top: 20px;                  /* ← 20px para BAIXO */
+    left: 20px;                 /* ← 20px para DIREITA */
+    
+    /* TAMANHO */
+    width: 120px;
+    height: 80px;
+    
+    /* VISUAL */
+    background: #4ADE80;
+    border-radius: 10px;
+    
+    /* DISPLAY */
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* TEXTO */
+    font-weight: bold;
+    color: white;
+  }
+
+  .caixa-absolute {
+    /* POSIÇÃO */
+    position: absolute;         /* ← Posição absoluta ao pai */
+    top: 20px;                  /* ← 20px do topo do pai */
+    right: 20px;                /* ← 20px da direita do pai */
+    
+    /* TAMANHO */
+    width: 120px;
+    height: 80px;
+    
+    /* VISUAL */
+    background: #F87171;
+    border-radius: 10px;
+    
+    /* DISPLAY */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* TEXTO */
+    font-weight: bold;
+    color: white;
+  }
+
+  .caixa-fixed {
+    /* POSIÇÃO */
+    position: fixed;            /* ← Fixo na tela (não rola) */
+    bottom: 20px;               /* ← 20px do fundo da tela */
+    right: 20px;                /* ← 20px da direita da tela */
+    z-index: 999;               /* ← Fica na frente de tudo */
+    
+    /* TAMANHO */
+    width: 60px;
+    height: 60px;
+    
+    /* VISUAL */
+    background: #FFF59D;
+    border-radius: 50%;         /* ← Círculo perfeito */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    
+    /* DISPLAY */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* TEXTO */
+    font-size: 1.5rem;
+    
+    /* TRANSFORMAÇÃO */
+    transition: transform 0.3s;
+  }
+
+  .caixa-fixed:hover {
+    transform: rotate(90deg);   /* ← Rotaciona 90 graus */
+    cursor: pointer;
+  }
+
+  /* ========================================
+     DEMONSTRAÇÃO DE BORDAS
+     ======================================== */
+  .demo-border {
+    /* ESPAÇAMENTO */
+    padding: 20px;
+    margin-top: 20px;
+    
+    /* VISUAL */
+    background: rgba(255, 255, 255, 0.1);
+    border: 4px solid #FFD700;  /* ← Borda sólida dourada */
+    border-radius: 20px;        /* ← Cantos arredondados */
+    
+    /* Borda individual no topo */
+    border-top: 8px solid #4ADE80;
+  }
+
+  /* ========================================
+     DEMONSTRAÇÃO DE OVERFLOW
+     ======================================== */
+  .demo-overflow {
+    /* TAMANHO */
+    width: 100%;
+    max-width: 400px;
+    height: 150px;              /* ← Altura limitada */
+    
+    /* ESPAÇAMENTO */
+    padding: 15px;
+    margin-top: 20px;
+    
+    /* VISUAL */
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(255, 255, 255, 0.4);
+    border-radius: 10px;
+    
+    /* OVERFLOW */
+    overflow-y: auto;           /* ← Barra de rolagem vertical quando necessário */
+  }
+
+  /* ========================================
+     DEMONSTRAÇÃO DE TRANSFORM
+     ======================================== */
+  .demo-transform {
+    /* DISPLAY */
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    
+    /* ESPAÇAMENTO */
+    padding: 20px;
+    margin-top: 20px;
+    
+    /* VISUAL */
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+  }
+
+  .caixa-transform {
+    /* TAMANHO */
+    width: 100px;
+    height: 100px;
+    
+    /* VISUAL */
+    background: #9D5FFF;
+    border-radius: 10px;
+    
+    /* DISPLAY */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* TEXTO */
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    
+    /* TRANSFORMAÇÃO */
+    transition: transform 0.3s;
+  }
+
+  .caixa-transform:nth-child(1):hover {
+    transform: translateX(20px); /* ← Move 20px para direita */
+  }
+
+  .caixa-transform:nth-child(2):hover {
+    transform: translateY(-20px); /* ← Move 20px para cima */
+  }
+
+  .caixa-transform:nth-child(3):hover {
+    transform: scale(1.3);      /* ← Aumenta 30% */
+  }
+
+  .caixa-transform:nth-child(4):hover {
+    transform: rotate(45deg);   /* ← Rotaciona 45 graus */
+  }
+
+  /* ========================================
+     DEMONSTRAÇÃO DE CALC E UNIDADES
+     ======================================== */
+  .demo-calc {
+    /* TAMANHO com cálculo dinâmico */
+    width: calc(100% - 40px);   /* ← 100% menos 40px */
+    
+    /* ESPAÇAMENTO */
+    padding: clamp(10px, 3%, 30px); /* ← Mín 10px, ideal 3%, máx 30px */
+    margin: 20px auto;          /* ← Centralizado horizontalmente */
+    
+    /* VISUAL */
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid #4ADE80;
+    border-radius: 15px;
+  }
+
+  /* ========================================
+     GRID DE EXEMPLOS
+     ======================================== */
+  .demo-grid {
+    /* DISPLAY */
+    display: grid;              /* ← Ativa Grid Layout */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* ← Colunas responsivas */
+    gap: 20px;                  /* ← Espaço entre itens */
+    
+    /* ESPAÇAMENTO */
+    padding: 20px;
+    margin-top: 20px;
+    
+    /* VISUAL */
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+  }
+
+  .item-grid {
+    /* ESPAÇAMENTO */
+    padding: 30px;
+    
+    /* VISUAL */
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border-radius: 12px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    
+    /* TEXTO */
+    text-align: center;
+    font-weight: bold;
+    
+    /* TRANSFORMAÇÃO */
+    transition: all 0.3s;
+  }
+
+  .item-grid:hover {
+    transform: translateY(-5px); /* ← Levanta 5px */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  }
+
+  /* ========================================
+     TAG DE CÓDIGO
+     ======================================== */
+  code {
+    /* VISUAL */
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    
+    /* ESPAÇAMENTO */
+    padding: 2px 8px;
+    
+    /* TEXTO */
+    color: #4ADE80;
+    font-family: 'Courier New', monospace;
+  }
+
+  /* ========================================
+     BADGE INFORMATIVO
+     ======================================== */
+  .badge {
+    /* DISPLAY */
+    display: inline-block;
+    
+    /* ESPAÇAMENTO */
+    padding: 5px 12px;
+    margin: 5px;
+    
+    /* VISUAL */
+    background: rgba(74, 222, 128, 0.3);
+    border: 1px solid #4ADE80;
+    border-radius: 20px;
+    
+    /* TEXTO */
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #4ADE80;
+  }
+
+  /* ========================================
+     RESPONSIVIDADE - MEDIA QUERIES
+     ======================================== */
+  @media (max-width: 768px) {
+    /* ← Aplica em telas menores que 768px */
+    
+    body {
+      padding: 10px;            /* ← Reduz padding em mobile */
+      gap: 20px;
+    }
+    
+    h1 {
+      font-size: 1.8rem;        /* ← Título menor em mobile */
+    }
+    
+    .caixa {
+      width: 100px;             /* ← Caixas menores */
+      height: 100px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<h1>🎨 Guia Visual Completo de CSS</h1>
+
+<!-- ========================================
+     SEÇÃO: DISPLAY FLEX
+     ======================================== -->
+<div class="secao">
+  <h2>📦 Display: Flex (Flexbox)</h2>
+  <div class="explicacao">
+    <strong>O que faz:</strong> Transforma o container em um sistema flexível para alinhar e distribuir itens.<br>
+    <strong>Propriedades principais:</strong><br>
+    • <code>display: flex</code> - Ativa o Flexbox<br>
+    • <code>justify-content: center</code> - Centraliza horizontalmente<br>
+    • <code>align-items: center</code> - Centraliza verticalmente<br>
+    • <code>gap: 15px</code> - Espaço entre os itens<br>
+    • <code>flex-direction: row</code> - Direção (row ou column)
+  </div>
+  
+  <span class="badge">Passe o mouse nas caixas!</span>
+  
+  <div class="demo-flex">
+    <div class="caixa">Caixa 1</div>
+    <div class="caixa">Caixa 2</div>
+    <div class="caixa">Caixa 3</div>
+  </div>
+</div>
+
+<!-- ========================================
+     SEÇÃO: POSITION
+     ======================================== -->
+<div class="secao">
+  <h2>📍 Position (Posicionamento)</h2>
+  <div class="explicacao">
+    <strong>Tipos de position:</strong><br>
+    • <code>static</code> - Fluxo normal (padrão)<br>
+    • <code>relative</code> - Move relativo à posição original<br>
+    • <code>absolute</code> - Posição absoluta ao elemento pai<br>
+    • <code>fixed</code> - Fixo na tela (não rola)<br>
+    • <code>sticky</code> - Híbrido entre relative e fixed
+  </div>
+  
+  <div class="container-position">
+    <div class="caixa-relative">
+      RELATIVE<br>
+      <small>top: 20px<br>left: 20px</small>
+    </div>
+    
+    <div class="caixa-absolute">
+      ABSOLUTE<br>
+      <small>top: 20px<br>right: 20px</small>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================
+     SEÇÃO: PADDING E MARGIN
+     ======================================== -->
+<div class="secao">
+  <h2>📏 Padding e Margin (Espaçamento)</h2>
+  <div class="explicacao">
+    <strong>Padding:</strong> Espaço INTERNO (entre conteúdo e borda)<br>
+    <strong>Margin:</strong> Espaço EXTERNO (entre elemento e vizinhos)<br><br>
+    
+    <strong>Atalhos:</strong><br>
+    • <code>padding: 20px</code> - Todos os lados = 20px<br>
+    • <code>padding: 10px 20px</code> - Vertical=10px, Horizontal=20px<br>
+    • <code>padding: 10px 20px 15px 25px</code> - Topo, Direita, Baixo, Esquerda<br>
+    • <code>padding-top: 10px</code> - Apenas o topo<br>
+    • <code>margin: 0 auto</code> - Centraliza horizontalmente
+  </div>
+  
+  <div style="background: rgba(255,100,100,0.3); padding: 20px; border: 3px dashed white; border-radius: 10px;">
+    <div style="background: rgba(100,255,100,0.5); padding: 20px; border: 3px solid white; border-radius: 8px;">
+      Esta caixa verde tem <code>padding: 20px</code> interno<br>
+      A caixa vermelha externa também tem <code>padding: 20px</code>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================
+     SEÇÃO: BORDAS E BORDER-RADIUS
+     ======================================== -->
+<div class="secao">
+  <h2>🔲 Border e Border-Radius (Bordas)</h2>
+  <div class="explicacao">
+    <strong>Propriedades:</strong><br>
+    • <code>border: 2px solid #000</code> - Espessura, estilo, cor<br>
+    • <code>border-radius: 10px</code> - Cantos arredondados<br>
+    • <code>border-radius: 50%</code> - Círculo perfeito<br>
+    • <code>border-top: 4px solid red</code> - Apenas um lado
+  </div>
+  
+  <div class="demo-border">
+    Esta caixa tem <code>border: 4px solid #FFD700</code><br>
+    E também <code>border-top: 8px solid #4ADE80</code> (borda verde no topo)<br>
+    Com <code>border-radius: 20px</code> para cantos arredondados
+  </div>
+</div>
+
+<!-- ========================================
+     SEÇÃO: OVERFLOW
+     ======================================== -->
+<div class="secao">
+  <h2>🌊 Overflow (Conteúdo Transbordante)</h2>
+  <div class="explicacao">
+    <strong>Controla o que acontece quando o conteúdo não cabe:</strong><br>
+    • <code>overflow: visible</code> - Transborda (padrão)<br>
+    • <code>overflow: hidden</code> - Esconde o que passa<br>
+    • <code>overflow: auto</code> - Barra de rolagem quando necessário<br>
+    • <code>overflow-y: scroll</code> - Rolagem apenas vertical
+  </div>
+  
+  <span class="badge">Role para ver mais conteúdo ↓</span>
+  
+  <div class="demo-overflow">
+    <p>Esta caixa tem <code>height: 150px</code> e <code>overflow-y: auto</code></p>
+    <p>Linha 1 - Conteúdo de exemplo</p>
+    <p>Linha 2 - Conteúdo de exemplo</p>
+    <p>Linha 3 - Conteúdo de exemplo</p>
+    <p>Linha 4 - Conteúdo de exemplo</p>
+    <p>Linha 5 - Conteúdo de exemplo</p>
+    <p>Linha 6 - Conteúdo de exemplo</p>
+    <p>Linha 7 - Aparece barra de rolagem!</p>
+    <p>Linha 8 - Continue rolando...</p>
+  </div>
+</div>
+
+<!-- ========================================
+     SEÇÃO: TRANSFORM
+     ======================================== -->
+<div class="secao">
+  <h2>🔄 Transform (Transformações)</h2>
+  <div class="explicacao">
+    <strong>Transforma elementos sem afetar o layout:</strong><br>
+    • <code>transform: translateX(20px)</code> - Move horizontalmente<br>
+    • <code>transform: translateY(-10px)</code> - Move verticalmente<br>
+    • <code>transform: scale(1.2)</code> - Aumenta/diminui<br>
+    • <code>transform: rotate(45deg)</code> - Rotaciona
+  </div>
+  
+  <span class="badge">Passe o mouse para ver os efeitos!</span>
+  
+  <div class="demo-transform">
+    <div class="caixa-transform">Move X →</div>
+    <div class="caixa-transform">Move Y ↑</div>
+    <div class="caixa-transform">Scale ⚡</div>
+    <div class="caixa-transform">Rotate 🔄</div>
+  </div>
+</div>
+
+<!-- ========================================
+     SEÇÃO: CALC E UNIDADES
+     ======================================== -->
+<div class="secao">
+  <h2>📐 Calc e Unidades Dinâmicas</h2>
+  <div class="explicacao">
+    <strong>Cálculos e unidades responsivas:</strong><br>
+    • <code>calc(100% - 40px)</code> - Cálculo dinâmico<br>
+    • <code>clamp(10px, 5%, 50px)</code> - Mín, ideal, máx<br>
+    • <code>vh</code> - Porcentagem da altura da tela<br>
+    • <code>vw</code> - Porcentagem da largura da tela<br>
+    • <code>rem</code> - Relativo à fonte raiz<br>
+    • <code>em</code> - Relativo à fonte do elemento<br>
+    • <code>%</code> - Porcentagem do elemento pai
+  </div>
+  
+  <div class="demo-calc">
+    Esta caixa usa <code>width: calc(100% - 40px)</code><br>
+    E <code>padding: clamp(10px, 3%, 30px)</code> para ser responsiva!
+  </div>
+</div>
+
+<!-- ========================================
+     SEÇÃO: DISPLAY GRID
+     ======================================== -->
+<div class="secao">
+  <h2>📊 Display: Grid (Grid Layout)</h2>
+  <div class="explicacao">
+    <strong>Sistema de grade bidimensional:</strong><br>
+    • <code>display: grid</code> - Ativa o Grid<br>
+    • <code>grid-template-columns</code> - Define colunas<br>
+    • <code>gap: 20px</code> - Espaço entre células<br>
+    • <code>repeat(auto-fit, minmax(200px, 1fr))</code> - Grid responsivo
+  </div>
+  
+  <span class="badge">Redimensione a janela para ver a responsividade!</span>
+  
+  <div class="demo-grid">
+    <div class="item-grid">Item 1</div>
+    <div class="item-grid">Item 2</div>
+    <div class="item-grid">Item 3</div>
+    <div class="item-grid">Item 4</div>
+    <div class="item-grid">Item 5</div>
+    <div class="item-grid">Item 6</div>
+  </div>
+</div>
+
+<!-- ========================================
+     SEÇÃO: Z-INDEX
+     ======================================== -->
+<div class="secao">
+  <h2>🎭 Z-Index (Camadas/Profundidade)</h2>
+  <div class="explicacao">
+    <strong>Controla a ordem de empilhamento:</strong><br>
+    • Valores maiores = mais na frente<br>
+    • <code>z-index: 1</code> - Camada 1<br>
+    • <code>z-index: 999</code> - Muito na frente<br>
+    • <code>z-index: -1</code> - Atrás<br>
+    • Só funciona com <code>position</code> diferente de static!
+  </div>
+  
+  <div style="position: relative; height: 150px; background: rgba(0,0,0,0.2); border-radius: 12px; padding: 20px;">
+    <div style="position: absolute; top: 20px; left: 20px; width: 100px; height: 100px; background: #FF6B6B; border-radius: 10px; z-index: 1; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+      Z: 1
+    </div>
+    <div style="position: absolute; top: 40px; left: 60px; width: 100px; height: 100px; background: #4ADE80; border-radius: 10px; z-index: 2; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+      Z: 2
+    </div>
+    <div style="position: absolute; top: 60px; left: 100px; width: 100px; height: 100px; background: #C67AFF; border-radius: 10px; z-index: 3; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+      Z: 3
+    </div>
+  </div>
+</div>
+
+<!-- ========================================
+     SEÇÃO: BOX-SIZING
+     ======================================== -->
+<div class="secao">
+  <h2>📦 Box-Sizing (Cálculo de Tamanho)</h2>
+  <div class="explicacao">
+    <strong>Como o tamanho é calculado:</strong><br>
+    • <code>box-sizing: content-box</code> - Padrão: padding e border SÃO SOMADOS ao width<br>
+    • <code>box-sizing: border-box</code> - Melhor: padding e border INCLUÍDOS no width<br><br>
+    <strong>Exemplo:</strong><br>
+    Com <code>width: 200px</code> e <code>padding: 20px</code>:<br>
+    • content-box = 240px total (200 + 20 + 20)<br>
+    • border-box = 200px total (padding incluído)
+  </div>
+  
+  <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+    <div style="width: 150px; padding: 20px; background: #FF6B6B; border: 3px solid white; border-radius: 10px; box-sizing: content-box; text-align: center;">
+      <strong>content-box</strong><br>
+      width: 150px<br>
+      Total: 196px
+    </div>
+    <div style="width: 150px; padding: 20px; background: #4ADE80; border: 3px solid white; border-radius: 10px; box-sizing: border-box; text-align: center;">
+      <strong>border-box</strong><br>
+      width: 150px<br>
+      Total: 150px
+    </div>
+  </div>
+</div>
+
+<!-- ========================================
+     SEÇÃO: DISPLAY TYPES
+     ======================================== -->
+<div class="secao">
+  <h2>🎨 Display (Tipos de Exibição)</h2>
+  <div class="explicacao">
+    <strong>Tipos principais de display:</strong><br>
+    • <code>display: block</code> - Ocupa linha inteira (div, p, h1)<br>
+    • <code>display: inline</code> - Lado a lado, não aceita width/height (span, a)<br>
+    • <code>display: inline-block</code> - Lado a lado + aceita width/height<br>
+    • <code>display: flex</code> - Container flexível<br>
+    • <code>display: grid</code> - Sistema de grade<br>
+    • <code>display: none</code> - Esconde completamente
+  </div>
+  
+  <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px;">
+    <div style="background: #FF6B6B; padding: 10px; margin: 5px; border-radius: 8px; display: block;">
+      display: block (ocupa toda linha)
+    </div>
+    <span style="background: #4ADE80; padding: 10px; margin: 5px; border-radius: 8px; display: inline;">inline 1</span>
+    <span style="background: #4ADE80; padding: 10px; margin: 5px; border-radius: 8px; display: inline;">inline 2</span>
+    <span style="background: #4ADE80; padding: 10px; margin: 5px; border-radius: 8px; display: inline;">inline 3</span>
+    <div style="margin-top: 10px;">
+      <span style="background: #C67AFF; padding: 10px; margin: 5px; border-radius: 8px; display: inline-block; width: 150px; text-align: center;">inline-block 1</span>
+      <span style="background: #C67AFF; padding: 10px; margin: 5px; border-radius: 8px; display: inline-block; width: 150px; text-align: center;">inline-block 2</span>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================
+     SEÇÃO: WIDTH E HEIGHT
+     ======================================== -->
+<div class="secao">
+  <h2>📏 Width e Height (Largura e Altura)</h2>
+  <div class="explicacao">
+    <strong>Propriedades de tamanho:</strong><br>
+    • <code>width: 300px</code> - Largura fixa<br>
+    • <code>height: 200px</code> - Altura fixa<br>
+    • <code>min-width: 200px</code> - Largura mínima<br>
+    • <code>max-width: 600px</code> - Largura máxima<br>
+    • <code>min-height: 100vh</code> - Altura mínima = tela inteira<br>
+    • <code>width: 100%</code> - 100% do elemento pai<br>
+    • <code>width: 50vw</code> - 50% da largura da viewport
+  </div>
+  
+  <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+    <div style="width: 200px; height: 100px; background: linear-gradient(135deg, #FF6B6B, #FFE66D); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+      width: 200px<br>height: 100px
+    </div>
+    <div style="min-width: 150px; height: 100px; background: linear-gradient(135deg, #4ADE80, #67E8F9); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; padding: 10px;">
+      min-width: 150px<br>(pode crescer)
+    </div>
+    <div style="width: 100%; max-width: 300px; height: 100px; background: linear-gradient(135deg, #C67AFF, #F87171); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+      width: 100%<br>max-width: 300px
+    </div>
+  </div>
+</div>
+
+<!-- ========================================
+     SEÇÃO: GAP (ESPAÇAMENTO ENTRE ITENS)
+     ======================================== -->
+<div class="secao">
+  <h2>🔲 Gap (Espaçamento entre Itens)</h2>
+  <div class="explicacao">
+    <strong>Funciona com Flexbox e Grid:</strong><br>
+    • <code>gap: 20px</code> - Espaço entre todos os itens<br>
+    • <code>row-gap: 15px</code> - Espaço entre linhas<br>
+    • <code>column-gap: 10px</code> - Espaço entre colunas<br><br>
+    <strong>Vantagem:</strong> Melhor que usar margin em cada item!
+  </div>
+  
+  <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px;">
+    <p style="margin-bottom: 10px;"><strong>Sem gap (usando margin):</strong></p>
+    <div style="display: flex; flex-wrap: wrap; margin-bottom: 20px;">
+      <div style="width: 80px; height: 80px; background: #FF6B6B; border-radius: 8px; margin: 5px;"></div>
+      <div style="width: 80px; height: 80px; background: #FF6B6B; border-radius: 8px; margin: 5px;"></div>
+      <div style="width: 80px; height: 80px; background: #FF6B6B; border-radius: 8px; margin: 5px;"></div>
+    </div>
+    
+    <p style="margin-bottom: 10px;"><strong>Com gap: 15px:</strong></p>
+    <div style="display: flex; flex-wrap: wrap; gap: 15px;">
+      <div style="width: 80px; height: 80px; background: #4ADE80; border-radius: 8px;"></div>
+      <div style="width: 80px; height: 80px; background: #4ADE80; border-radius: 8px;"></div>
+      <div style="width: 80px; height: 80px; background: #4ADE80; border-radius: 8px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================
+     SEÇÃO: JUSTIFY-CONTENT E ALIGN-ITEMS
+     ======================================== -->
+<div class="secao">
+  <h2>🎯 Justify-Content e Align-Items (Alinhamento)</h2>
+  <div class="explicacao">
+    <strong>Usado com Flexbox:</strong><br>
+    <strong>justify-content</strong> (eixo horizontal):<br>
+    • <code>flex-start</code> - Início<br>
+    • <code>center</code> - Centro<br>
+    • <code>flex-end</code> - Final<br>
+    • <code>space-between</code> - Espaço entre<br>
+    • <code>space-around</code> - Espaço ao redor<br><br>
+    <strong>align-items</strong> (eixo vertical):<br>
+    • <code>flex-start</code> - Topo<br>
+    • <code>center</code> - Centro<br>
+    • <code>flex-end</code> - Fundo<br>
+    • <code>stretch</code> - Estica (padrão)
+  </div>
+  
+  <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px;">
+    <p style="margin-bottom: 10px;"><strong>justify-content: space-between</strong></p>
+    <div style="display: flex; justify-content: space-between; height: 80px; background: rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; margin-bottom: 15px;">
+      <div style="width: 60px; background: #FF6B6B; border-radius: 8px;"></div>
+      <div style="width: 60px; background: #4ADE80; border-radius: 8px;"></div>
+      <div style="width: 60px; background: #C67AFF; border-radius: 8px;"></div>
+    </div>
+    
+    <p style="margin-bottom: 10px;"><strong>justify-content: center + align-items: center</strong></p>
+    <div style="display: flex; justify-content: center; align-items: center; height: 100px; background: rgba(255,255,255,0.1); border-radius: 8px; padding: 10px;">
+      <div style="width: 60px; height: 60px; background: #FFE66D; border-radius: 8px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================
+     SEÇÃO: FLEX-DIRECTION
+     ======================================== -->
+<div class="secao">
+  <h2>🔄 Flex-Direction (Direção do Flex)</h2>
+  <div class="explicacao">
+    <strong>Define a direção dos itens:</strong><br>
+    • <code>row</code> - Horizontal, da esquerda para direita (padrão)<br>
+    • <code>column</code> - Vertical, de cima para baixo<br>
+    • <code>row-reverse</code> - Horizontal invertido<br>
+    • <code>column-reverse</code> - Vertical invertido
+  </div>
+  
+  <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+    <div>
+      <p style="margin-bottom: 10px;"><strong>row (padrão)</strong></p>
+      <div style="display: flex; flex-direction: row; gap: 10px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
+        <div style="width: 50px; height: 50px; background: #FF6B6B; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</div>
+        <div style="width: 50px; height: 50px; background: #4ADE80; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
+        <div style="width: 50px; height: 50px; background: #C67AFF; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</div>
+      </div>
+    </div>
+    
+    <div>
+      <p style="margin-bottom: 10px;"><strong>column</strong></p>
+      <div style="display: flex; flex-direction: column; gap: 10px; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px;">
+        <div style="width: 50px; height: 50px; background: #FF6B6B; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold;">1</div>
+        <div style="width: 50px; height: 50px; background: #4ADE80; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold;">2</div>
+        <div style="width: 50px; height: 50px; background: #C67AFF; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: bold;">3</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================
+     SEÇÃO: BACKGROUND
+     ======================================== -->
+<div class="secao">
+  <h2>🎨 Background (Fundo)</h2>
+  <div class="explicacao">
+    <strong>Propriedades de fundo:</strong><br>
+    • <code>background: #FF6B6B</code> - Cor sólida<br>
+    • <code>background: rgba(255, 107, 107, 0.5)</code> - Cor com transparência<br>
+    • <code>background: linear-gradient(135deg, #667eea, #764ba2)</code> - Gradiente<br>
+    • <code>background: url('imagem.jpg')</code> - Imagem<br>
+    • <code>background-size: cover</code> - Cobre toda área<br>
+    • <code>backdrop-filter: blur(10px)</code> - Efeito de desfoque
+  </div>
+  
+  <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+    <div style="width: 150px; height: 100px; background: #FF6B6B; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+      Cor Sólida
+    </div>
+    <div style="width: 150px; height: 100px; background: rgba(74, 222, 128, 0.5); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white;">
+      Transparente
+    </div>
+    <div style="width: 150px; height: 100px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+      Gradiente
+    </div>
+    <div style="width: 150px; height: 100px; background: linear-gradient(135deg, #FF6B6B, #FFE66D, #4ADE80, #67E8F9, #C67AFF); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold;">
+      Arco-Íris
+    </div>
+  </div>
+</div>
+
+<!-- ========================================
+     SEÇÃO: TRANSITION E ANIMATION
+     ======================================== -->
+<div class="secao">
+  <h2>✨ Transition e Animation (Animações)</h2>
+  <div class="explicacao">
+    <strong>Transition:</strong> Suaviza mudanças de propriedades<br>
+    • <code>transition: all 0.3s</code> - Todas propriedades em 0.3s<br>
+    • <code>transition: transform 0.5s ease</code> - Apenas transform<br><br>
+    <strong>Animation:</strong> Animações complexas com keyframes<br>
+    • Define estados intermediários<br>
+    • Pode repetir infinitamente
+  </div>
+  
+  <span class="badge">Passe o mouse!</span>
+  
+  <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 15px;">
+    <div style="width: 120px; height: 120px; background: #FF6B6B; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-weight: bold; transition: all 0.3s; cursor: pointer;" onmouseover="this.style.transform='scale(1.2)'; this.style.background='#4ADE80'" onmouseout="this.style.transform='scale(1)'; this.style.background='#FF6B6B'">
+      Hover me!
+    </div>
+    
+    <div style="width: 120px; height: 120px; background: #C67AFF; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-weight: bold; transition: all 0.5s; cursor: pointer;" onmouseover="this.style.transform='rotate(180deg)'" onmouseout="this.style.transform='rotate(0deg)'">
+      Spin!
+    </div>
+    
+    <div style="width: 120px; height: 120px; background: #FFE66D; color: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; animation: pulse 2s infinite;">
+      Pulsa!
+    </div>
+  </div>
+</div>
+
+<!-- ========================================
+     SEÇÃO: RESPONSIVIDADE
+     ======================================== -->
+<div class="secao">
+  <h2>📱 Responsividade (Media Queries)</h2>
+  <div class="explicacao">
+    <strong>Adapta o layout para diferentes tamanhos de tela:</strong><br>
+    • <code>@media (max-width: 768px)</code> - Telas menores que 768px<br>
+    • <code>@media (min-width: 1024px)</code> - Telas maiores que 1024px<br>
+    • <code>@media (orientation: landscape)</code> - Modo paisagem<br><br>
+    <strong>Breakpoints comuns:</strong><br>
+    • Mobile: até 768px<br>
+    • Tablet: 768px - 1024px<br>
+    • Desktop: acima de 1024px
+  </div>
+  
+  <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px;">
+    <p style="margin-bottom: 10px;">📱 <strong>Redimensione a janela do navegador!</strong></p>
+    <p>Esta página já é responsiva. Em telas pequenas:</p>
+    <ul style="margin-left: 20px; margin-top: 10px;">
+      <li>O título fica menor</li>
+      <li>O padding do body diminui</li>
+      <li>As caixas ficam menores</li>
+      <li>O gap entre elementos reduz</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ========================================
+     RESUMO FINAL
+     ======================================== -->
+<div class="secao">
+  <h2>🎓 Resumo dos Conceitos</h2>
+  <div class="explicacao">
+    <strong>Ordem de organização CSS recomendada:</strong>
+  </div>
+  
+  <div style="background: rgba(0,0,0,0.4); padding: 20px; border-radius: 12px; border-left: 4px solid #FFD700;">
+    <code style="display: block; line-height: 2;">
+      elemento {<br>
+      &nbsp;&nbsp;/* 1. DISPLAY E POSIÇÃO */<br>
+      &nbsp;&nbsp;display: flex;<br>
+      &nbsp;&nbsp;position: relative;<br>
+      &nbsp;&nbsp;z-index: 10;<br>
+      <br>
+      &nbsp;&nbsp;/* 2. TAMANHO */<br>
+      &nbsp;&nbsp;width: 100%;<br>
+      &nbsp;&nbsp;max-width: 900px;<br>
+      &nbsp;&nbsp;min-height: 100vh;<br>
+      &nbsp;&nbsp;box-sizing: border-box;<br>
+      <br>
+      &nbsp;&nbsp;/* 3. ESPAÇAMENTO */<br>
+      &nbsp;&nbsp;margin: 0 auto;<br>
+      &nbsp;&nbsp;padding: 20px;<br>
+      &nbsp;&nbsp;gap: 15px;<br>
+      <br>
+      &nbsp;&nbsp;/* 4. ALINHAMENTO */<br>
+      &nbsp;&nbsp;justify-content: center;<br>
+      &nbsp;&nbsp;align-items: center;<br>
+      <br>
+      &nbsp;&nbsp;/* 5. VISUAL */<br>
+      &nbsp;&nbsp;background: #667eea;<br>
+      &nbsp;&nbsp;border: 2px solid #000;<br>
+      &nbsp;&nbsp;border-radius: 10px;<br>
+      &nbsp;&nbsp;overflow: hidden;<br>
+      <br>
+      &nbsp;&nbsp;/* 6. TRANSFORMAÇÃO */<br>
+      &nbsp;&nbsp;transform: translateY(10px);<br>
+      &nbsp;&nbsp;transition: all 0.3s;<br>
+      <br>
+      &nbsp;&nbsp;/* 7. TEXTO */<br>
+      &nbsp;&nbsp;font-family: Arial;<br>
+      &nbsp;&nbsp;color: white;<br>
+      }
+    </code>
+  </div>
+</div>
+
+<!-- ========================================
+     ELEMENTO FIXO (DEMONSTRAÇÃO)
+     ======================================== -->
+<div class="caixa-fixed" title="Elemento FIXED - Sempre visível, mesmo ao rolar a página!">
+  📍
+</div>
+
+<!-- ========================================
+     ANIMAÇÃO CSS (KEYFRAMES)
+     ======================================== -->
+<style>
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+</style>
+
+</body>
+</html>
